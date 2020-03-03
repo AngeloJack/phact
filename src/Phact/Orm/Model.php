@@ -15,11 +15,13 @@ namespace Phact\Orm;
 use InvalidArgumentException;
 use Phact\Event\EventManagerInterface;
 use Phact\Exceptions\UnknownMethodException;
+use Phact\Form\ModelForm;
 use Phact\Helpers\ClassNames;
 use Phact\Helpers\SmartProperties;
 use Phact\Helpers\Text;
 use Phact\Orm\Configuration\ConfigurationProvider;
 use Phact\Orm\Fields\Field;
+use Psr\SimpleCache\CacheInterface;
 use Serializable;
 
 /**
@@ -572,7 +574,7 @@ class Model implements Serializable
         $query = $this->getQuery();
         $pk = $query->insert($this->getTableName(), $prepared);
         $pkAttribute = $this->getPkAttribute();
-        
+
         $field = $this->getFieldsManager()->getField($pkAttribute);
         $this->_attributes[$pkAttribute] = $field->attributePrepareValue($pk);
 
@@ -681,5 +683,14 @@ class Model implements Serializable
     {
         $data = unserialize($serialized);
         $this->setDbData($data);
+    }
+
+    /**
+     * Single admin model form
+     * @return ModelForm
+     */
+    public function getSingleAdminModelForm()
+    {
+        return new ModelForm();
     }
 }
